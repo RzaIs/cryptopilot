@@ -22,12 +22,12 @@ Response Body
 ```
 <br/>
 
-### POST `/auth/login`
+### POST `/auth/register`
 Request Body
 ```json
 {
-  "username": "rzais",
-  "email": "rza@email.com",
+  "username": "your_username",
+  "email": "email@example.com",
   "encryptedPassword": "oAQcgupQhBOOuOziRtuYhEyYYNY0ezDKh",
   "keyID": 248
 }
@@ -49,11 +49,11 @@ Response Body
 }
 ```
 
-### POST `/auth/register`
+### POST `/auth/login`
 Request Body
 ```json
 {
-  "username": "rzais",
+  "username": "your_username",
   "encryptedPassword": "oAQcgupQhBOOuOziRtuYhEyYYNY0ezDKh",
   "keyID": 832
 }

@@ -15,8 +15,6 @@ export class AuthCryptoService {
         format: 'pem'
       }
     })
-
-    console.log(publicKey)
     
     const validPublicKey = publicKey.replace(
       '-----BEGIN RSA PUBLIC KEY-----', ''

@@ -17,7 +17,7 @@ Response Body
 ```json
 {
   "id": 24533,
-  "key" "MIIBCgKCAQEAqryK4Acc40xhK/cJ+sjf"
+  "key": "MIIBCgKCAQEAqryK4Acc40xhK/cJ+sjf"
 }
 ```
 <br/>

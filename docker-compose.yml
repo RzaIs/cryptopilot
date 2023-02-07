@@ -1,0 +1,18 @@
+version: "1.0"
+services:
+  postgres:
+    image: "postgres:alpine"
+    restart: always
+    environment:
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
+  back-end:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL: postgresql://${PG_USERNAME}:${PG_PASSWORD}@postgres:5432/${PG_DB}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      ARGON_SALT: ${ARGON_SALT}

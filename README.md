@@ -113,6 +113,17 @@ null
 <br/>
 <br/>
 
+# Auth Checks
+
+## for regular auth check you have to have your `access-token` in your request header.
+
+<br/>
+
+## for refreshing expired `access-token` you have to have your `refresh-token` in your header
+
+<br/>
+<br/>
+
 # Addition Info Abount Encryption
 
 ## you can encrypt your password with the key you obtained from `/auth/key` with the help of lib `jsencrypt` . code example:

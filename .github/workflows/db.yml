@@ -1,0 +1,23 @@
+name: DB push
+  
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push-new-db-scheme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: 16
+
+      - name: push scheme
+        run: npx prisma db push
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        
+      
+  

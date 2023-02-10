@@ -19,9 +19,6 @@ jobs:
         with:
           node-version: 16
 
-      - name: change directory to `ms-nest`
-        run: cd ms-nest
-
       - name: push scheme
         run: npx prisma db push
         working-directory: ./ms-nest/

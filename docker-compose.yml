@@ -1,7 +1,7 @@
 version: '3'
 services:
   ms-nest:
-    build: ./ms-nest
+    build: ms-nest
     image: ms-nest
     ports:
       - 3000:3000

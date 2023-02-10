@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
-    
+      
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.6.0
         with:
@@ -24,8 +24,10 @@ jobs:
 
       - name: push scheme
         run: npx prisma db push
+        working-directory: ./ms-nest/
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
         
       
   

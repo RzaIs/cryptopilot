@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'ms-nest/*'
 
 jobs:
   push-new-db-scheme:
@@ -16,6 +18,9 @@ jobs:
         uses: actions/setup-node@v3.6.0
         with:
           node-version: 16
+
+      - name: change directory to `ms-nest`
+        run: cd ms-nest
 
       - name: push scheme
         run: npx prisma db push

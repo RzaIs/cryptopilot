@@ -1,7 +1,7 @@
 version: "1.0"
 services:
   back-end:
-    build: .
+    build: ./ms-nest
     ports:
       - 3000:3000
     environment:

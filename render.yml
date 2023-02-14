@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: nest_v1
+    env: docker
+    plan: free
+    dockerfilePath: ./ms-nest/Dockerfile
+    dockerContext: ./ms-nest
+    envVars:
+      - fromGroup: nutro-env
+
+
+  - type: web
+    name: ml_v1
+    env: docker
+    plan: free
+    dockerfilePath: ./ms-data/Dockerfile
+    dockerContext: ./ms-data
+    envVars:
+      - fromGroup: nutro-env

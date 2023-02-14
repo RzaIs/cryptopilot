@@ -10,3 +10,10 @@ services:
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       ARGON_SALT: ${ARGON_SALT}
+      BRIDGE_SECRET: ${BRIDGE_SECRET}
+  
+  ms-data:
+    build: ms-data
+    image: ms-data
+    environment:
+      BRIDGE_SECRET: ${BRIDGE_SECRET}

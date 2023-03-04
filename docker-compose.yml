@@ -11,7 +11,9 @@ services:
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       ARGON_SALT: ${ARGON_SALT}
       BRIDGE_SECRET: ${BRIDGE_SECRET}
-  
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+
   ms-data:
     build: ms-data
     image: ms-data

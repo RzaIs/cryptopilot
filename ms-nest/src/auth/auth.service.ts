@@ -1,13 +1,15 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import { PrivateKey } from "@prisma/client";
+import { OneTimePassword, OneTimeResetToken, PrivateKey, User } from "@prisma/client";
 import { hash, verify } from "argon2";
+import { randomUUID } from "crypto";
+import { EmailService } from "src/email/email.service";
 import { none, Optional } from "src/helper/optional";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserResponseModel } from "src/user/user.models";
 import { AuthCryptoService } from "./auth.crypto";
-import { AuthResponseModel, LoginRequestModel, PublicKeyResponseModel, RegisterRequestModel, TokensReponseModel } from "./auth.models";
+import { AuthResponseModel, CreateOTPResponseModel, LoginRequestModel, PublicKeyResponseModel, RegisterRequestModel, ResetPasswordRequestModel, ResetTokenResponseModel, TokensReponseModel, ValidateOTPRequestModel } from "./auth.models";
 
 
 @Injectable()
@@ -16,6 +18,7 @@ export class AuthService {
     private readonly crypto: AuthCryptoService,
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
+    private readonly email: EmailService,
     private readonly jwt: JwtService,
   ) { }
 
@@ -66,7 +69,7 @@ export class AuthService {
       throw new ForbiddenException('Session timeout')
     }
 
-    const password = await this.crypto.decrypt(
+    const password = this.crypto.decrypt(
       credentials.encryptedPassword,
       keyData.privateKey
     )
@@ -98,6 +101,123 @@ export class AuthService {
       } else {
         throw error
       }
+    }
+  }
+  
+  async sendResetPasswordOTP(email: string): Promise<CreateOTPResponseModel> {
+
+    const user: Optional<User> = await this.prisma.user.findUnique({
+      where: { email }
+    })
+
+    if (none(user)) {
+      throw new NotFoundException('User with the provided email not found')
+    }
+
+    const otp = await this.prisma.oneTimePassword.create({
+      data: {
+        challenge: randomUUID(),
+        password: Math.floor(100000 + Math.random() * 900000).toString(),
+        userId: user.id
+      }
+    })
+
+    this.email.sendEmail({
+      receiver: user.email,
+      subject: 'Password reset requested',
+      html: `<h1>${otp.password}</h1>`
+    })
+
+    return { challage: otp.challenge }
+  }
+
+  async validateOTP(challenge: string, password: string): Promise<ResetTokenResponseModel> {
+    const otp: Optional<OneTimePassword> = await this.prisma.oneTimePassword.findUnique({
+      where: { challenge }
+    })
+
+    if (none(otp)) {
+      throw new NotFoundException('Invalid or expired OTP challage')
+    }
+
+    if (otp.password !== password) {
+      throw new UnauthorizedException('Invalid one-time-password')
+    }
+
+    const [resetToken, _] = await Promise.all([
+      this.prisma.oneTimeResetToken.create({
+        data: {
+          uuid: randomUUID() + randomUUID(),
+          userId: otp.userId
+        }
+      }),
+      this.prisma.oneTimePassword.delete({
+        where: { challenge }
+      })
+    ])
+
+    return { uuid: resetToken.uuid }
+  }
+
+  async resetPassword(params: ResetPasswordRequestModel) {
+    const token: Optional<OneTimeResetToken & { user: User }> = await this.prisma
+      .oneTimeResetToken
+      .findUnique({
+        where: { uuid: params.oneTimeToken },
+        include: {
+          user: true
+        }
+      })
+
+    console.log(token)
+
+    if (none(token)) {
+      throw new UnauthorizedException('Invalid password-reset-token')
+    }
+
+    const keyData: Optional<PrivateKey> = await this.prisma.privateKey.findUnique({
+      where: { id: params.keyID }
+    })
+
+    console.log(keyData)
+
+
+    if (none(keyData)) {
+      throw new NotFoundException('Encryption key with the given id not found')
+    }
+
+    const newPassword = this.crypto.decrypt(
+      params.encryptedPassword,
+      keyData.privateKey
+    )
+
+    console.log(newPassword)
+
+    const secretHash = await hash(newPassword)
+
+    console.log(secretHash)
+
+    const user: Optional<User> = await this.prisma.user.update({
+      where: {
+        id: token.userId
+      },
+      data: {
+        secret: secretHash
+      }
+    })
+
+    if (none(user)) {
+      throw new NotFoundException('User matching with the given token not found')
+    }
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.generateAccessToken(user.id, user.email),
+      this.generateRefreshToken(user.id, user.email)
+    ])
+
+    return {
+      user: new UserResponseModel(user),
+      tokens: { accessToken, refreshToken }
     }
   }
 

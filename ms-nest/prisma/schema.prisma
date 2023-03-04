@@ -17,11 +17,30 @@ model User {
   secret   String
   created  DateTime @default(now())
   updated  DateTime @updatedAt
+
+  otps OneTimePassword[]
+  otrt OneTimeResetToken[]
 }
 
 model PrivateKey {
-  id         Int   @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   privateKey String
   created    DateTime @default(now())
 }
 
+model OneTimePassword {
+  challenge String   @id
+  password  String
+  created   DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model OneTimeResetToken {
+  uuid    String   @id
+  created DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}

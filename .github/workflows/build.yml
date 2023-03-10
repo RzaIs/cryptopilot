@@ -1,0 +1,23 @@
+name: build application
+  
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  check-build-application:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: 16
+
+      - name: build application
+        run: npm run build
+        working-directory: ./ms-nest/

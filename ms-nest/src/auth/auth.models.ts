@@ -36,25 +36,25 @@ export class ResetPasswordRequestModel {
 
 // Response Models
 
-export interface PublicKeyResponseModel {
+export type PublicKeyResponseModel = {
   id: number,
   key: string
 }
 
-export interface TokensReponseModel {
+export type TokensReponseModel = {
   accessToken: string,
   refreshToken: string
 }
 
-export interface AuthResponseModel {
+export type AuthResponseModel = {
   user: UserResponseModel,
   tokens: TokensReponseModel
 }
 
-export interface CreateOTPResponseModel {
+export type CreateOTPResponseModel = {
   challage: string
 }
 
-export interface ResetTokenResponseModel {
+export type ResetTokenResponseModel = {
   uuid: string
 }

@@ -18,6 +18,10 @@ jobs:
         with:
           node-version: 16
 
+      - name: install node packages
+        run: npm i
+        working-directory: ./ms-nest/
+
       - name: build application
         run: npm run build
         working-directory: ./ms-nest/

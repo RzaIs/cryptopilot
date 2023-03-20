@@ -76,6 +76,53 @@ Response Body
 ```
 <br/>
 
+### POST `/auth/forget-password`
+Request Body
+```json
+{
+  "email": "email@example.com"
+}
+```
+Response Body
+```json
+{
+  "challage": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp"
+}
+```
+<br/>
+
+### POST `/auth/validate-otp/{challage}`
+Request Body
+```json
+{
+  "oneTimePassword": "123456"
+}
+```
+Response Body
+```json
+{
+  "uuid": "oAQcgupQhBOOuOziRtuYhEyYYNY0ezDKh"
+}
+```
+
+<br/>
+
+### POST `/auth/reset-password`
+Request Body
+```json
+{
+  "oneTimeToken": "oAQcgupQhBOOuOziRtuYhEyYYNY0ezDKh",
+  "encryptedPassword": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp",
+  "keyID": 324
+}
+```
+Response Body
+```json
+null
+```
+
+<br/>
+
 ### GET `/auth/refresh-token`
 Request Body
 ```json
@@ -147,3 +194,11 @@ function encrypt(password: string, key: string): string | null {
 }
 
 ```
+
+<br/>
+<br/>
+
+# Addition Info Password Reset
+
+### In order to reset password you first make a request to `/auth/forget-password` then you will get a string `challage` and will receive a 6 digit one time password in the email of the user. then you will send this `oneTimePassword` to `/auth/validate-otp/{challage}` with `challage` you received earlier. if they match and are correct you will get a `uuid` which is token for resetting your password. then you will request to reset your password via `/auth/reset-password`. Note: you have to encrypt the new password like you did in login and register and will send encrypted password and keyID alongside your `oneTimeToken` a.k.a `uuid`.
+

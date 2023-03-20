@@ -124,8 +124,11 @@ export class AuthService {
 
     this.email.sendEmail({
       receiver: user.email,
-      subject: 'Password reset requested',
-      html: `<h1>${otp.password}</h1>`
+      subject: `Password reset requested for account ${user.username}`,
+      html: `\
+        <h1>Here is your one time password</h1><br/> \
+        <h2>${otp.password}</h2><br/> \
+        <h3>If you did not requested it, you can safely ignore this email.</h3>`
     })
 
     return { challage: otp.challenge }

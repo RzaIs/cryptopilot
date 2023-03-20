@@ -1,4 +1,4 @@
-name: DB push
+name: DB schema push
   
 on:
   push:

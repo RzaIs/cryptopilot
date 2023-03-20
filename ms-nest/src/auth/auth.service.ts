@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { OneTimePassword, OneTimeResetToken, PrivateKey, User } from "@prisma/client";
@@ -38,6 +38,10 @@ export class AuthService {
       throw new ForbiddenException('Incorrect credentials')
     }
 
+    if (keyData.created < this.getDateWithDeadline(2)) {
+      throw new ForbiddenException('Encryption key is expired')
+    }
+
     const password = this.crypto.decrypt(
       credentials.encryptedPassword,
       keyData.privateKey
@@ -67,6 +71,10 @@ export class AuthService {
 
     if (none(keyData)) {
       throw new ForbiddenException('Session timeout')
+    }
+
+    if (keyData.created < this.getDateWithDeadline(2)) {
+      throw new ForbiddenException('Encryption key is expired')
     }
 
     const password = this.crypto.decrypt(
@@ -143,6 +151,10 @@ export class AuthService {
       throw new NotFoundException('Invalid or expired OTP challage')
     }
 
+    if (otp.created < this.getDateWithDeadline(10)) {
+      throw new ForbiddenException('One-time-password is expired')
+    }
+
     if (otp.password !== password) {
       throw new UnauthorizedException('Invalid one-time-password')
     }
@@ -163,30 +175,32 @@ export class AuthService {
   }
 
   async resetPassword(params: ResetPasswordRequestModel) {
-    const token: Optional<OneTimeResetToken & { user: User }> = await this.prisma
+    const token: Optional<OneTimeResetToken> = await this.prisma
       .oneTimeResetToken
       .findUnique({
-        where: { uuid: params.oneTimeToken },
-        include: {
-          user: true
+        where: { 
+          uuid: params.oneTimeToken 
         }
       })
 
-    console.log(token)
-
     if (none(token)) {
       throw new UnauthorizedException('Invalid password-reset-token')
+    }
+
+    if (token.created < this.getDateWithDeadline(10)) {
+      throw new ForbiddenException('One-time-reset-token is expired')
     }
 
     const keyData: Optional<PrivateKey> = await this.prisma.privateKey.findUnique({
       where: { id: params.keyID }
     })
 
-    console.log(keyData)
-
-
     if (none(keyData)) {
       throw new NotFoundException('Encryption key with the given id not found')
+    }
+
+    if (keyData.created < this.getDateWithDeadline(2)) {
+      throw new ForbiddenException('Encryption key is expired')
     }
 
     const newPassword = this.crypto.decrypt(
@@ -194,20 +208,23 @@ export class AuthService {
       keyData.privateKey
     )
 
-    console.log(newPassword)
-
     const secretHash = await hash(newPassword)
 
-    console.log(secretHash)
-
-    const user: Optional<User> = await this.prisma.user.update({
-      where: {
-        id: token.userId
-      },
-      data: {
-        secret: secretHash
-      }
-    })
+    const [user, _] = await Promise.all([
+      this.prisma.user.update({
+        where: {
+          id: token.userId
+        },
+        data: {
+          secret: secretHash
+        }
+      }),
+      this.prisma.oneTimeResetToken.delete({
+        where: {
+          uuid: token.uuid
+        }
+      })
+    ])
 
     if (none(user)) {
       throw new NotFoundException('User matching with the given token not found')
@@ -266,26 +283,42 @@ export class AuthService {
       data: { privateKey }
     })
 
-    setTimeout(() => {
-      this.clearOldKeys().then(() => {
-        console.log('✅ Old Keys Have Been Successfully Removed ✅')
-      }).catch((error) => {
-        console.log('⛔️ An Error Occured While Clearing Old Keys ⛔️')
-      })
-    }, 0.0);
-
     return { id: privateKeyData.id, key: publicKey }
   }
 
   async clearOldKeys(): Promise<void> {
-    const date = new Date()
-    date.setSeconds(date.getSeconds() - 60)
     await this.prisma.privateKey.deleteMany({
       where: {
         created: {
-          lte: new Date(date)
+          lte: this.getDateWithDeadline(2)
         }
       }
     })
+  }
+
+  async cleanOldOTPs(): Promise<void> {
+    await this.prisma.oneTimePassword.deleteMany({
+      where: {
+        created: {
+          lte: this.getDateWithDeadline(10)
+        }
+      }
+    })
+  }
+
+  async cleanOldOTRTs(): Promise<void> {
+    await this.prisma.oneTimeResetToken.deleteMany({
+      where: {
+        created: {
+          lte: this.getDateWithDeadline(10)
+        }
+      }
+    })
+  }
+
+  private getDateWithDeadline(minutes: number): Date {
+    const date = new Date()
+    date.setMinutes(date.getMinutes() - minutes)
+    return date
   }
 }

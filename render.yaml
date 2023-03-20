@@ -3,6 +3,7 @@ services:
     name: nest_v1
     env: docker
     plan: free
+    region: frankfurt
     dockerfilePath: ./ms-nest/Dockerfile
     dockerContext: ./ms-nest
     envVars:
@@ -13,6 +14,7 @@ services:
     name: ml_v1
     env: docker
     plan: free
+    region: frankfurt
     dockerfilePath: ./ms-data/Dockerfile
     dockerContext: ./ms-data
     envVars:

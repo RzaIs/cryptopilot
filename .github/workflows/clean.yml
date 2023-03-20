@@ -1,13 +1,14 @@
-name: DB clean up
+name: DB clean up cron job
 
 on:
   schedule:
-    - cron: 41 0 * * *
-
+    - cron: "00 */6 * * *"
+  
 jobs:
-  cron:
+  clean-up:
+    name: make a DB clean up request
     runs-on: ubuntu-latest
- 
+    
     steps:
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: curl request
+        run: curl https://nest-v1.onrender.com/auth/clean-up

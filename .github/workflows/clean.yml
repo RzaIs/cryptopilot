@@ -1,6 +1,8 @@
+name: DB clean up
+
 on:
   schedule:
-    - 33 0 * * *
+    - 37 0 * * *
 
 jobs:
   cron:

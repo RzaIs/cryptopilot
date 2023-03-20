@@ -2,7 +2,7 @@ name: DB clean up
 
 on:
   schedule:
-    - 37 0 * * *
+    - cron: 41 0 * * *
 
 jobs:
   cron:

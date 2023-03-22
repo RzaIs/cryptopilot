@@ -46,6 +46,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthRefreshStrategy.JwtGuard)
+  @HttpCode(HttpStatus.CREATED)
   @Get('refresh-token')
   async refreshToken(@GetUser() user: User): Promise<TokensReponseModel> {
     return executeAsync(this.service.refreshTokens(user.id, user.email))
@@ -61,5 +62,31 @@ export class AuthController {
     } catch (error) {
       console.log(`⛔️ An error occured while clean up ⛔️\nERROR: ${error}`)
     }
+  }
+
+  // Unsafe Login - Development Only
+
+  @Post('unsafe/login')
+  @HttpCode(HttpStatus.OK)
+  async unsafeLogin(
+    @Body() credentials: {
+      username: string,
+      password: string,
+    }
+  ): Promise<AuthResponseModel> {
+    return executeAsync(this.service.unsafeLogin(credentials))
+  }
+
+  // Unsafe Register - Development Only
+
+  @Post('unsafe/register')
+  async unsafeRegister(
+    @Body() credentials: {
+      email: string
+      username: string,
+      password: string,
+    }
+  ): Promise<AuthResponseModel> {
+    return executeAsync(this.service.unsafeRegister(credentials))
   }
 }

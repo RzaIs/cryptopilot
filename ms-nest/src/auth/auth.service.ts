@@ -321,4 +321,75 @@ export class AuthService {
     date.setMinutes(date.getMinutes() - minutes)
     return date
   }
+
+  // Unsafe Login - Development Only
+
+  async unsafeLogin(credentials: {
+    username: string,
+    password: string,
+  }): Promise<AuthResponseModel> {
+    const user: Optional<User> = await this.prisma.user.findUnique({
+      where: {
+        username: credentials.username
+      }
+    })
+
+    if (none(user)) {
+      throw new ForbiddenException('Incorrect credentials')
+    }
+
+    const verified = await verify(user.secret, credentials.password)
+
+    if (!verified) {
+      throw new ForbiddenException('Incorrect credentials')
+    }
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.generateAccessToken(user.id, user.email),
+      this.generateRefreshToken(user.id, user.email)
+    ])
+
+    return {
+      user: new UserResponseModel(user),
+      tokens: { accessToken, refreshToken }
+    }
+  }
+
+  // Unsafe Register - Development Only
+
+  async unsafeRegister(credentials: {
+    email: string
+    username: string,
+    password: string,
+  }): Promise<AuthResponseModel> {
+
+    const secretHash = await hash(credentials.password)
+
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          email: credentials.email,
+          username: credentials.username,
+          secret: secretHash
+        }
+      })
+
+      const [accessToken, refreshToken] = await Promise.all([
+        this.generateAccessToken(user.id, user.email),
+        this.generateRefreshToken(user.id, user.email)
+      ])
+
+      return {
+        user: new UserResponseModel(user),
+        tokens: { accessToken, refreshToken }
+      }
+
+    } catch (error) {
+      if (error.code === 'P2002') {
+        throw new ForbiddenException('Credentials are already taken!')
+      } else {
+        throw error
+      }
+    }
+  }
 }

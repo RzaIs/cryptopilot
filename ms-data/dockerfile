@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY ./ /app
 
+RUN apk add --no-cache gcc
 RUN pip install -r requirement.txt
 
 EXPOSE 4040

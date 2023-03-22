@@ -2,7 +2,8 @@ import yfinance as yf
 import datetime as dt
 
 
-coins = ['BTC-USD', 'ETH-USD', 'ADA-USD']
+coins = ['BTC-USD', 'ETH-USD', 'ADA-USD', 'DNB-USD', 'KRP-USD', 'OKB-USD', 'MATIC-USD', 'DOT-USD','SOL-USD',
+         'LINK-USD', 'TRX-USD', 'LTC-USD', 'UNI-USD', 'AVAX-USD']
 interval = ['15m', '30m', '1h', '1d', '1w']
 
 end_date = dt.datetime.strptime("2023-01-01", "%Y-%m-%d").date()
@@ -46,7 +47,7 @@ def calculate_macd(ticker, start_date, end_date, interval):
          success_rate = results.count('Success') / len(results)
     else:
          success_rate = 0
-         
+
     # Return the MACD values, buy and sell dates, results, and success rate
     output = {
         'MACD': macd,

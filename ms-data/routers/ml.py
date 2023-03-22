@@ -2,7 +2,9 @@ from fastapi import APIRouter
 from typing import Any
 from indicators.rsi import calculate_RSI
 from indicators.ma import calculate_moving_average
-from models.indicator_models import RSI_ReqBody, MovingAverageReqBody
+from indicators.macd import calculate_macd
+from datetime import datetime
+from models.indicator_models import RSI_MADC_ReqBody, MovingAverageReqBody
 
 router: APIRouter = APIRouter(
   prefix = '/ml',
@@ -10,9 +12,11 @@ router: APIRouter = APIRouter(
 )
 
 @router.post('/rsi')
-async def get_rsi(body: RSI_ReqBody) -> dict[str, Any]:
+async def get_rsi(body: RSI_MADC_ReqBody) -> dict[str, Any]:
   return calculate_RSI(
     body.ticker, 
+    datetime.fromisoformat(body.start_date),
+    datetime.fromisoformat(body.end_date),
     body.interval
   )
 
@@ -20,7 +24,18 @@ async def get_rsi(body: RSI_ReqBody) -> dict[str, Any]:
 async def get_ma(body: MovingAverageReqBody) -> dict[str, Any]:
   return calculate_moving_average(
     body.ticker,
+    datetime.fromisoformat(body.start_date),
+    datetime.fromisoformat(body.end_date),
     body.interval,
     body.day1,
     body.day2
+  )
+
+@router.post('/madc')
+async def get_madc(body: RSI_MADC_ReqBody) -> dict[str, Any]:
+  return calculate_macd(
+    body.ticker,
+    datetime.fromisoformat(body.start_date),
+    datetime.fromisoformat(body.end_date),
+    body.interval
   )

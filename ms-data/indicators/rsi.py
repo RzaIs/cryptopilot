@@ -1,5 +1,6 @@
 #Relative Strength Index
 
+import math
 import yfinance as yf
 import pandas as pd
 import datetime as dt
@@ -59,10 +60,10 @@ def calculate_RSI(ticker, start_date, end_date, interval):
          success_rate = 0
 
     output = {
-        'Coin_Close':data['Close'], # plot
-        'RSI': rsi, # plot
-        'Sell Dates': sell_dates, # plot triangle
-        'Buy Dates': buy_dates, # plot triangle
+        'Coin_Close': list(data['Close']), # plot
+        'RSI': list(map(lambda e: None if math.isnan(e) else e, rsi)), # plot
+        'Sell Dates': list(sell_dates), # plot triangle
+        'Buy Dates': list(buy_dates), # plot triangle
         'Results': results, # shit
         'Success Rate': success_rate # the most important
     }

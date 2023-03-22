@@ -2,14 +2,19 @@
 
 import yfinance as yf
 import pandas as pd
+import datetime as dt
+
 
 coins = ['BTC-USD', 'EHT-USD', 'ADA-USD']
 interval = ['15m', '30m', '1h', '1d', '1w']
+
+end_date = dt.datetime.strptime("2023-01-01", "%Y-%m-%d").date()
+start_date = end_date - dt.timedelta(days=365) # for 1 year
 ticker, interval = coins[2], interval[3]
 
-def calculate_RSI(ticker, interval):
+def calculate_RSI(ticker, start_date, end_date, interval):
     # Get data from Yahoo Finance for 1 year period with 1-day intervals for given ticker
-    data = yf.download(ticker, period='1y', interval=interval)
+    data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 
     # Calculate the differences between the closing prices of each day
     price_diff = data['Close'].diff()

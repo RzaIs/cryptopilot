@@ -18,11 +18,4 @@ export class UserController {
   async getSelfUser(@GetUser() user: User): Promise<UserResponseModel> {
     return execute(() => new UserResponseModel(user))
   }
-
-  @Get('example')
-  async getExample(): Promise<any> {
-    return (await executeAsync(
-      msaxios(() => axios.get('http://ms-data:4040/example/data'))
-    )).data
-  }
 }

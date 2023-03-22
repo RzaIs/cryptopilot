@@ -2,7 +2,6 @@
 
 import yfinance as yf
 import pandas as pd
-import matplotlib.pyplot as plt
 
 coins = ['BTC-USD', 'EHT-USD', 'ADA-USD']
 interval = ['15m', '30m', '1h', '1d', '1w']
@@ -37,18 +36,21 @@ def calculate_RSI(ticker, interval):
     results = []
     for date in sell_dates:
         if data.loc[date, 'Close'] < data.loc[date-pd.Timedelta(days=1), 'Close']:
-            results.append('Negative')
+            results.append('Failure')
         else:
-            results.append('Positive')
+            results.append('Success')
 
     for date in buy_dates:
         if data.loc[date, 'Close'] > data.loc[date-pd.Timedelta(days=1), 'Close']:
-            results.append('Positive')
+            results.append('Success')
         else:
-            results.append('Negative')
+            results.append('Failure')
 
     # Calculate the success rate of the recommendations
-    success_rate = results.count('Positive') / len(results) * 100
+    if len(results) > 0:
+         success_rate = results.count('Success') / len(results)
+    else:
+         success_rate = 0
 
     output = {
         'Coin_Close':data['Close'], # plot

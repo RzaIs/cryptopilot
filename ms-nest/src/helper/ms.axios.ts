@@ -1,5 +1,13 @@
-import { AxiosError } from "axios"
+import { ConfigModule } from "@nestjs/config"
+import axios, { AxiosError } from "axios"
 import { some } from "./optional"
+
+export const Axios = axios.create({
+  baseURL: 'https://ml-v1.onrender.com',
+  headers: {
+    BRIDGE_SECRET: process.env.BRIDGE_SECRET
+  }
+})
 
 export async function msaxios<T>(networkCall: () => Promise<{ data: T }>): Promise<{ data: T }> {
   try {

@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY ./ /app
 
-RUN apk add --no-cache gcc
+RUN apk update
+RUN apk add --no-cache make automake gcc g++ subversion python3-dev
 RUN pip install -r requirement.txt
 
 EXPOSE 4040

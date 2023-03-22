@@ -1,4 +1,3 @@
-import { ConfigModule } from "@nestjs/config"
 import axios, { AxiosError } from "axios"
 import { some } from "./optional"
 

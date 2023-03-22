@@ -1,6 +1,7 @@
 # Moving Average
 
 import yfinance as yf
+import math
 
 coins = ['BTC-USD', 'ETH-USD', 'ADA-USD']
 interval = ['15m', '30m', '1h', '1d', '1w']
@@ -36,19 +37,27 @@ def calculate_moving_average(ticker, interval, day1, day2):
         else:
             results.append('Open position')
 
-    success_rate = 100*results.count('Success') / len(results)
+    if len(results) > 0:
+         success_rate = results.count('Success') / len(results)
+    else:
+         success_rate = 0
+
 
     # Return the moving average values, buy and sell dates, results, and success rate
-#     return data['Close'],ma1, ma2, buy_dates, sell_dates, results, success_rate
+    # return data['Close'],ma1, ma2, buy_dates, sell_dates, results, success_rate
 
     output = {
-        'Coin_Close':data['Close'], # plot
-        'MA1': ma1, # plot
-        'MA2': ma2, # plot
-        'Sell Dates': sell_dates, # plot
-        'Buy Dates': buy_dates, # plot
-        'Results': results, # shit
-        'Success Rate': success_rate # the most important (changes depend on user input, we can give some default value maybe at first, idk)
+        'Coin_Close': list(data['Close']), # plot
+        'MA1': list(
+            map(lambda e:  None if math.isnan(e) else e, ma1)
+        ), # plot
+        'MA2': list(
+            map(lambda e: None if math.isnan(e) else e, ma2)
+        ), # plot
+        'Sell Dates': list(sell_dates), # plot
+        'Buy Dates': list(buy_dates), # plot
+        'Results': list(results), # shit
+        'Success Rate': success_rate # the most important (changes depend on user input, maybe we can give some default value maybe at first, idk)
     }
     
     return output

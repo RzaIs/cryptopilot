@@ -1,9 +1,11 @@
-FROM rzais/ms-data-base:latest
+FROM python:3.11-alpine
 
 WORKDIR /app
 
 COPY ./ /app
 
+RUN apk update
+RUN apk add --no-cache make automake gcc g++ subversion python3-dev
 RUN pip install -r requirements.txt
 
 EXPOSE 4040

@@ -53,8 +53,6 @@ def EMA_cross(ticker, period, interval, slow=50, fast=20):
         'Data': data,
         'Sell Dates': sell_dates,
         'Buy Dates': buy_dates,
-        'sp': sell_points,
-        'bp': buy_points,
         'Success Rate': success_rate
     }
     return output

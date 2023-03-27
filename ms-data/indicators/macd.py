@@ -43,20 +43,18 @@ def calculate_macd(ticker, start_date, end_date, interval):
             results.append('Open position')
 
     
-    if len(results) > 0:
-         success_rate = results.count('Success') / len(results)
-    else:
-         success_rate = 0
+    # Calculate the success rate of the recommendations
+    success_rate = results.count('Success') / len(results) if len(results) > 0 else 0
 
     # Return the MACD values, buy and sell dates, results, and success rate
     output = {
-        'MACD': macd,
-        'Signal': signal,
-        'Histogram': histogram,
-        'Buy Dates': buy_dates,
-        'Sell Dates': sell_dates,
-        'Results': results,
-        'Success Rate': success_rate
+        'macd': macd,
+        'signal': signal,
+        'histogram': histogram,
+        'buy_dates': buy_dates,
+        'sell_dates': sell_dates,
+        'results': results,
+        'success_rate': success_rate
     }
 
     return output

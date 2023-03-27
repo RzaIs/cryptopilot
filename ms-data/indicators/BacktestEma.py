@@ -22,14 +22,41 @@ def EMA_cross(ticker, period, interval, slow=50, fast=20):
     buy_dates = data.iloc[buy_signals].index
     sell_dates = data.iloc[sell_signals].index
     
+    buy_points = data.iloc[buy_signals].Close.values
+    sell_points = data.iloc[sell_signals].Close.values
+
+    sell_df = pd.DataFrame({'Date': sell_dates, 'Close' : sell_points, 'status' : 0})
+    buy_df = pd.DataFrame({'Date': buy_dates, 'Close' : buy_points, 'status' : 1})
+
+    df = pd.concat([sell_df, buy_df])
+    df = df.sort_values(by = ['Date'])
+    df = df.reset_index(drop = True)
+
+    status = 1
+    success = 0
+    count = 0
+    for i in range(len(df)-1):
+        if(status and df.iloc[i].status ==  1):
+            status = 0
+            index = i
+        if(status == 0):
+            self = df.iloc[i]
+            nex = df.iloc[i+1]
+            if(self.status == 1):
+                count += 1   
+                if(nex.status == 0 and self.Close < nex.Close):
+                    success += 1
+    
+    success_rate = (success/count)*100
     output = {
         'Close' : data['Close'], #for plot
         'Data': data,
         'Sell Dates': sell_dates,
         'Buy Dates': buy_dates,
-#         'Success Rate': success_rate #missing
+        'sp': sell_points,
+        'bp': buy_points,
+        'Success Rate': success_rate
     }
     return output
 
 btc = EMA_cross(ticker, '3y', interval, 50, 20)
-print(btc)

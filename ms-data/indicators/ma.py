@@ -15,7 +15,7 @@ day1, day2 = 5,150 # user input
 
 def calculate_moving_average(ticker, start_date, end_date, interval, day1, day2):
     
-    # Download historical data for any Crypto Coin (ticker)
+    # Get data from Yahoo Finance for 1 year period with 1-day intervals for given ticker
     data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 
     # Calculate the moving average values
@@ -42,27 +42,21 @@ def calculate_moving_average(ticker, start_date, end_date, interval, day1, day2)
         else:
             results.append('Open position')
 
-    if len(results) > 0:
-         success_rate = results.count('Success') / len(results)
-    else:
-         success_rate = 0
-
-
-    # Return the moving average values, buy and sell dates, results, and success rate
-    # return data['Close'],ma1, ma2, buy_dates, sell_dates, results, success_rate
+    # Calculate the success rate of the recommendations
+    success_rate = results.count('Success') / len(results) if len(results) > 0 else 0
 
     output = {
-        'Coin_Close': list(data['Close']), # plot
-        'MA1': list(
+        'coin_cloes': list(data['Close']), # plot
+        'ma1': list(
             map(lambda e:  None if math.isnan(e) else e, ma1)
         ), # plot
-        'MA2': list(
+        'ma2': list(
             map(lambda e: None if math.isnan(e) else e, ma2)
         ), # plot
-        'Sell Dates': list(sell_dates), # plot
-        'Buy Dates': list(buy_dates), # plot
-        'Results': list(results), # shit
-        'Success Rate': success_rate # the most important (changes depend on user input, maybe we can give some default value maybe at first, idk)
+        'sell_dates': list(sell_dates), # plot
+        'buy_dates': list(buy_dates), # plot
+        'results': list(results), # shit
+        'success_rate': success_rate # the most important (changes depend on user input, maybe we can give some default value maybe at first, idk)
     }
     
     return output

@@ -11,3 +11,10 @@ export class MovingAverageRequestModel extends RSI_MADC_RequestModel {
   @IsNotEmpty() day1: number
   @IsNotEmpty() day2: number
 }
+
+export class BollingerBandsRequestBody {
+  @IsNotEmpty() crypto: string
+  @IsNotEmpty() period: string
+  @IsNotEmpty() interval: string
+  @IsNotEmpty() window: number
+}

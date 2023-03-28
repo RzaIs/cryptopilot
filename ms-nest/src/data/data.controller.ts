@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { AuthStrategy } from "src/auth/auth.strategy";
 import { executeAsync } from "src/helper/service.executer";
-import { MovingAverageRequestModel, RSI_MADC_RequestModel } from "./data.models";
+import { BollingerBandsRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel } from "./data.models";
 import { DataService } from "./data.service";
 
 @UseGuards(AuthStrategy.JwtGuard)
@@ -22,5 +22,10 @@ export class DataController {
   @Post('madc')
   async getMADC(@Body() body: RSI_MADC_RequestModel): Promise<unknown> {
     return executeAsync(this.service.getMADC(body))
+  }
+
+  @Post('bollinger_bands')
+  async getBollingerBands(@Body() body: BollingerBandsRequestBody): Promise<unknown> {
+    return executeAsync(this.service.getBollingerBands(body))
   }
 }

@@ -1,12 +1,13 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
+import math
 
 coins = ['BTC-USD', 'EHT-USD', 'ADA-USD']
 interval = ['15m', '30m', '1h', '1d', '1w']
 crypto, interval = coins[0], interval[3]
 
-def getDates(crypto, period, interval, window) :
+def get_bollinger_dates(crypto, period, interval, window) :
     data = yf.download(tickers=crypto, period = period, interval = interval)
 
     data['20MA'] = data['Close'].rolling(window=window).mean()
@@ -52,18 +53,21 @@ def getDates(crypto, period, interval, window) :
     else:
         success_rate = num_wins
     
-    output = {
-        'Close' : data['Close'].values, #for plot
-        'Upper' : data['Upper'].values, #for plot
-        'Lower' : data['Lower'].values, #for plot
-        '20MA' : data['20MA'].values, #for plot
-        'Data': data,
-        'Sell Dates': sell_dates,
-        'Buy Dates': buy_dates,
+    print(sell_dates)
+
+    return {
+        'Close': list(data['Close'].values), #for plot
+        'Upper': list( #for plot
+            map(lambda e: None if math.isnan(e) else e, data['Upper'].values)    
+        ),
+        'Lower': list(  #for plot
+            map(lambda e: None if math.isnan(e) else e, data['Lower'].values)    
+        ),
+        '20MA': list( #for plot
+            map(lambda e: None if math.isnan(e) else e, data['20MA'].values)
+        ), 
+        # 'Data': data,
+        'Sell Dates': list(sell_dates),
+        'Buy Dates': list(buy_dates),
         'Success Rate': success_rate
     }
-    return output
-
-
-
-btc = getDates(crypto, '1y', interval, 20)

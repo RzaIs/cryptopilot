@@ -1,13 +1,21 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import yfinance as yf
+import datetime as dt
 
-coins = ['BTC-USD', 'EHT-USD', 'ADA-USD']
+coins = ['BTC-USD', 'ETH-USD', 'ADA-USD', 'DNB-USD', 'KRP-USD', 'OKB-USD', 'MATIC-USD', 'DOT-USD','SOL-USD',
+         'LINK-USD', 'TRX-USD', 'LTC-USD', 'UNI-USD', 'AVAX-USD']
 interval = ['15m', '30m', '1h', '1d', '1w']
-ticker, interval = coins[0], interval[3]
 
-def EMA_cross(ticker, period, interval, slow=50, fast=20):
-    data = yf.download(tickers = ticker, period = period , interval = interval)
+end_date = dt.datetime.strptime("2023-01-01", "%Y-%m-%d").date()
+start_date = end_date - dt.timedelta(days=365) # for 1 year
+ticker, interval = coins[1], interval[3]
+
+
+
+def EMA_cross(ticker, start_date, end_date, interval, slow=50, fast=20):
+    data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 
     ema_slow = data['Close'].ewm(span=slow, adjust=False).mean()
     ema_fast = data['Close'].ewm(span=fast, adjust=False).mean()
@@ -47,10 +55,17 @@ def EMA_cross(ticker, period, interval, slow=50, fast=20):
                     success += 1
     
     success_rate = (success/count)*100
-
-    return {
-        'close' : data['Close'], #for plot
-        'sell_dates': list(sell_dates),
-        'buy_dates': list(buy_dates),
+    output = {
+        'ema_slow' : ema_slow.values,  #for plot(y axis)
+        'ema_fast' : ema_fast.values, #for plot(y axis)
+        'close' : data['Close'], #for plot(y axis)
+        'dates': data.index,  #for plot(x axis)
+        'sell_dates': sell_dates, #for plot(x axis)
+        'buy_dates': buy_dates, #for plot(x axis)
+        'buy_points' : buy_points, #for plot(y axis)
+        'sell_points' : sell_points, #for plot(y axis)
         'success_rate': success_rate
     }
+    return output
+
+btc = EMA_cross(ticker, start_date, end_date, interval)

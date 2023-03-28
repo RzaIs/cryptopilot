@@ -48,13 +48,10 @@ def EMA_cross(ticker, period, interval, slow=50, fast=20):
                     success += 1
     
     success_rate = (success/count)*100
-    output = {
-        'Close' : data['Close'], #for plot
-        'Data': data,
-        'Sell Dates': sell_dates,
-        'Buy Dates': buy_dates,
-        'Success Rate': success_rate
-    }
-    return output
 
-btc = EMA_cross(ticker, '3y', interval, 50, 20)
+    return {
+        'close' : data['Close'], #for plot
+        'sell_dates': list(sell_dates),
+        'buy_dates': list(buy_dates),
+        'success_rate': success_rate
+    }

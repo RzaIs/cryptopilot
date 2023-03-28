@@ -9,3 +9,9 @@ class RSI_MADC_ReqBody(BaseModel):
 class MovingAverageReqBody(RSI_MADC_ReqBody):
   day1: int
   day2: int
+
+class BollingerBandsReqBody(BaseModel):
+  crypto: str
+  period: str
+  interval: str
+  window: int

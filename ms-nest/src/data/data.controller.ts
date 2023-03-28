@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { AuthStrategy } from "src/auth/auth.strategy";
 import { executeAsync } from "src/helper/service.executer";
-import { BollingerBandsRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel, StochasticRequestBody } from "./data.models";
+import { BollingerBandsRequestBody, EmaCrossRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel, StochasticRequestBody } from "./data.models";
 import { DataService } from "./data.service";
 
 @UseGuards(AuthStrategy.JwtGuard)
@@ -32,5 +32,10 @@ export class DataController {
   @Post('stochastic')
   async getStochasticOscillator(@Body() body: StochasticRequestBody): Promise<unknown> {
     return executeAsync(this.service.getStochasticOscillator(body))
+  }
+
+  @Post('ema')
+  async getEmaCross(@Body() body: EmaCrossRequestBody): Promise<unknown> {
+    return executeAsync(this.service.getEmaCross(body))
   }
 }

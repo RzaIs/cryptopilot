@@ -21,3 +21,10 @@ class StochasticReqBody(BaseModel):
   start_date: str
   end_date: str
   interval: str
+
+class EMACrossReqBody(BaseModel):
+  ticker: str
+  period: str
+  interval: str
+  slow: int
+  fast: int

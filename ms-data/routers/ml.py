@@ -4,8 +4,14 @@ from indicators.rsi import calculate_RSI
 from indicators.ma import calculate_moving_average
 from indicators.macd import calculate_macd
 from indicators.bollinger_bands import get_bollinger_dates
+from indicators.stochastic import calculate_stochastic_oscillator
 from datetime import datetime
-from models.indicator_models import RSI_MADC_ReqBody, MovingAverageReqBody, BollingerBandsReqBody
+from models.indicator_models import (
+  RSI_MADC_ReqBody,
+  MovingAverageReqBody,
+  BollingerBandsReqBody,
+  StochasticReqBody
+)
 
 router: APIRouter = APIRouter(
   prefix = '/ml',
@@ -48,4 +54,13 @@ async def get_bollinger_bands(body: BollingerBandsReqBody) -> dict[str, Any]:
     body.period,
     body.interval,
     body.window
+  )
+
+@router.post('/stochastic')
+async def get_stochastic_oscillator(body: StochasticReqBody) -> dict[str, Any]:
+  return calculate_stochastic_oscillator(
+    body.ticker,
+    body.start_date,
+    body.end_date,
+    body.interval
   )

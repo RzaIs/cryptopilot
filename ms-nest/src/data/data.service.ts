@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Axios, msaxios } from "src/helper/ms.axios";
-import { BollingerBandsRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel } from "./data.models";
+import { BollingerBandsRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel, StochasticRequestBody } from "./data.models";
 
 @Injectable()
 export class DataService {
@@ -25,6 +25,12 @@ export class DataService {
   async getBollingerBands(body: BollingerBandsRequestBody): Promise<unknown> {
     return (await msaxios(() => {
       return Axios.post('/ml/bollinger_bands', body)
+    })).data
+  }
+
+  async getStochasticOscillator(body: StochasticRequestBody): Promise<unknown> {
+    return (await msaxios(() => {
+      return Axios.post('/ml/stochastic', body)
     })).data
   }
 }

@@ -5,12 +5,14 @@ from indicators.ma import calculate_moving_average
 from indicators.macd import calculate_macd
 from indicators.bollinger_bands import get_bollinger_dates
 from indicators.stochastic import calculate_stochastic_oscillator
+from indicators.backtest_ema import EMA_cross
 from datetime import datetime
 from models.indicator_models import (
   RSI_MADC_ReqBody,
   MovingAverageReqBody,
   BollingerBandsReqBody,
-  StochasticReqBody
+  StochasticReqBody,
+  EMACrossReqBody
 )
 
 router: APIRouter = APIRouter(
@@ -63,4 +65,14 @@ async def get_stochastic_oscillator(body: StochasticReqBody) -> dict[str, Any]:
     body.start_date,
     body.end_date,
     body.interval
+  )
+
+@router.post('/ema')
+async def get_ema_cross(body: EMACrossReqBody) -> dict[str, Any]:
+  return EMA_cross(
+    body.ticker,
+    body.period,
+    body.interval,
+    body.slow,
+    body.fast
   )

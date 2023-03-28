@@ -18,3 +18,10 @@ export class BollingerBandsRequestBody {
   @IsNotEmpty() interval: string
   @IsNotEmpty() window: number
 }
+
+export class StochasticRequestBody {
+  @IsNotEmpty() ticker: string
+  @IsNotEmpty() start_date: string
+  @IsNotEmpty() end_date: string
+  @IsNotEmpty() interval: string
+}

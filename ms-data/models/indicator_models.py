@@ -15,3 +15,9 @@ class BollingerBandsReqBody(BaseModel):
   period: str
   interval: str
   window: int
+
+class StochasticReqBody(BaseModel):
+  ticker: str
+  start_date: str
+  end_date: str
+  interval: str

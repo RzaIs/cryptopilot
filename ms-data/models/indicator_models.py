@@ -29,3 +29,9 @@ class EMACrossReqBody(BaseModel):
   interval: str
   slow: int
   fast: int
+
+class CryptoValueReqBody(BaseModel):
+  ticker: str
+  start_date: str
+  end_date: str
+  interval: str

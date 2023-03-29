@@ -45,7 +45,7 @@ def calculate_moving_average(ticker, start_date, end_date, interval, day1, day2)
     # Calculate the success rate of the recommendations
     success_rate = results.count('Success') / len(results) if len(results) > 0 else 0
 
-    output = {
+    return {
         'coin_cloes': list(data['Close']), # plot
         'ma1': list(
             map(lambda e:  None if math.isnan(e) else e, ma1)
@@ -59,7 +59,5 @@ def calculate_moving_average(ticker, start_date, end_date, interval, day1, day2)
         'success_rate': success_rate # the most important (changes depend on user input, maybe we can give some default value maybe at first, idk)
     }
     
-    return output
-
     # For Plotting : data['Close'], ma1, ma2, + in a triangle form(buy_dates, sell_dates)
     # Note for the website : day2 must be bigger than day1

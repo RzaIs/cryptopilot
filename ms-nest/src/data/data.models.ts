@@ -34,3 +34,11 @@ export class EmaCrossRequestBody {
   @IsNotEmpty() slow: number
   @IsNotEmpty() fast: number
 }
+
+export class CryptoValueRequestBody {
+  @IsNotEmpty() ticker: string
+  @IsNotEmpty() start_date: string
+  @IsNotEmpty() end_date: string
+  @IsNotEmpty() interval: string
+}
+  

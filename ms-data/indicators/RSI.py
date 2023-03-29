@@ -56,7 +56,7 @@ def calculate_RSI(ticker, start_date, end_date, interval):
     # Calculate the success rate of the recommendations
     success_rate = results.count('Success') / len(results) if len(results) > 0 else 0
 
-    output = {
+    return {
         'close': list(data['Close']), # plot (1)
         'rsi': list(map(lambda e: None if math.isnan(e) else e, rsi)), # plot (2)
         'sell_dates': list(sell_dates), # plot triangle points (1) (2)
@@ -65,6 +65,3 @@ def calculate_RSI(ticker, start_date, end_date, interval):
         'success_rate': success_rate # the most important
     }
     
-    return output
-
-print(calculate_RSI(ticker, start_date, end_date, interval))

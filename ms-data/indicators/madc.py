@@ -47,7 +47,7 @@ def calculate_macd(ticker, start_date, end_date, interval):
     success_rate = results.count('Success') / len(results) if len(results) > 0 else 0
 
     # Return the MACD values, buy and sell dates, results, and success rate
-    output = {
+    return {
         'macd': macd,
         'signal': signal,
         'histogram': histogram,
@@ -56,5 +56,3 @@ def calculate_macd(ticker, start_date, end_date, interval):
         'results': results,
         'success_rate': success_rate
     }
-
-    return output

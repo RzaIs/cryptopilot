@@ -1,18 +1,20 @@
 from fastapi import APIRouter
 from typing import Any
 from indicators.rsi import calculate_RSI
-from indicators.ma import calculate_moving_average
-from indicators.macd import calculate_macd
+from indicators.moving_average import calculate_moving_average
+from indicators.madc import calculate_macd
 from indicators.bollinger_bands import get_bollinger_dates
-from indicators.stochastic import calculate_stochastic_oscillator
+from indicators.stochastic_oscillator import calculate_stochastic_oscillator
 from indicators.backtest_ema import EMA_cross
+from indicators.crypto_values import value as crypto_value
 from datetime import datetime
 from models.indicator_models import (
   RSI_MADC_ReqBody,
   MovingAverageReqBody,
   BollingerBandsReqBody,
   StochasticReqBody,
-  EMACrossReqBody
+  EMACrossReqBody,
+  CryptoValueReqBody
 )
 
 router: APIRouter = APIRouter(
@@ -76,4 +78,13 @@ async def get_ema_cross(body: EMACrossReqBody) -> dict[str, Any]:
     body.interval,
     body.slow,
     body.fast
+  )
+
+@router.post('/cryptos')
+async def get_crypto_values(body: CryptoValueReqBody) -> dict[str, Any]:
+  return crypto_value(
+    body.ticker,
+    body.start_date,
+    body.end_date,
+    body.interval
   )

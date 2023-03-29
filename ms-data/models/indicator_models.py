@@ -3,35 +3,40 @@ from pydantic import BaseModel
 class RSI_MADC_ReqBody(BaseModel):
   ticker: str
   interval: str
-  start_date: str
-  end_date: str
+  start_date: str | None
+  end_date: str | None
 
-class MovingAverageReqBody(RSI_MADC_ReqBody):
+class MovingAverageReqBody(BaseModel):
+  ticker: str
+  interval: str
   day1: int
   day2: int
+  start_date: str | None
+  end_date: str | None
 
 class BollingerBandsReqBody(BaseModel):
   crypto: str
-  period: str
   interval: str
   window: int
+  start_date: str | None
+  end_date: str | None
 
 class StochasticReqBody(BaseModel):
   ticker: str
-  start_date: str
-  end_date: str
   interval: str
+  start_date: str | None
+  end_date: str | None
 
 class EMACrossReqBody(BaseModel):
   ticker: str
-  start_date: str
-  end_date: str
   interval: str
   slow: int
   fast: int
+  start_date: str | None
+  end_date: str | None
 
 class CryptoValueReqBody(BaseModel):
   ticker: str
-  start_date: str
-  end_date: str
   interval: str
+  start_date: str | None
+  end_date: str | None

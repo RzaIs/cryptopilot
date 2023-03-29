@@ -55,15 +55,14 @@ def EMA_cross(ticker, start_date, end_date, interval, slow=50, fast=20):
                         success += 1
     
     success_rate = (success/count)*100
-    output = {
-        'ema_slow' : ema_slow.values,  #for plot(y axis)
-        'ema_fast' : ema_fast.values, #for plot(y axis)
+    return {
+        'ema_slow' : list(ema_slow.values),  #for plot(y axis)
+        'ema_fast' : list(ema_fast.values), #for plot(y axis)
         'close' : data['Close'], #for plot(y axis)
-        'dates': data.index,  #for plot(x axis)
-        'sell_dates': sell_dates, #for plot(x axis)
-        'buy_dates': buy_dates, #for plot(x axis)
-        'buy_points' : buy_points, #for plot(y axis)
-        'sell_points' : sell_points, #for plot(y axis)
+        'dates': list(data.index),  #for plot(x axis)
+        'sell_dates': list(sell_dates), #for plot(x axis)
+        'buy_dates': list(buy_dates), #for plot(x axis)
+        'buy_points' : list(buy_points), #for plot(y axis)
+        'sell_points' : list(sell_points), #for plot(y axis)
         'success_rate': success_rate
     }
-    return output

@@ -71,7 +71,8 @@ async def get_stochastic_oscillator(body: StochasticReqBody) -> dict[str, Any]:
 async def get_ema_cross(body: EMACrossReqBody) -> dict[str, Any]:
   return EMA_cross(
     body.ticker,
-    body.period,
+    body.start_date,
+    body.end_date,
     body.interval,
     body.slow,
     body.fast

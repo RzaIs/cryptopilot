@@ -28,7 +28,8 @@ export class StochasticRequestBody {
 
 export class EmaCrossRequestBody {
   @IsNotEmpty() ticker: string
-  @IsNotEmpty() period: string
+  @IsNotEmpty() start_date: string
+  @IsNotEmpty() end_date: string
   @IsNotEmpty() interval: string
   @IsNotEmpty() slow: number
   @IsNotEmpty() fast: number

@@ -67,5 +67,3 @@ def EMA_cross(ticker, start_date, end_date, interval, slow=50, fast=20):
         'success_rate': success_rate
     }
     return output
-
-btc = EMA_cross(ticker, start_date, end_date, interval)

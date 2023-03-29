@@ -66,3 +66,5 @@ def calculate_RSI(ticker, start_date, end_date, interval):
     }
     
     return output
+
+print(calculate_RSI(ticker, start_date, end_date, interval))

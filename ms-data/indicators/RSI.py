@@ -1,5 +1,3 @@
-#Relative Strength Index
-
 import math
 import yfinance as yf
 import pandas as pd
@@ -38,30 +36,43 @@ def calculate_RSI(ticker, start_date, end_date, interval):
     # Find the dates where RSI hit 70 or 30
     sell_dates = rsi[(rsi.shift(1) >= 70) & (rsi < 70)].index
     buy_dates = rsi[(rsi.shift(1) <= 30) & (rsi > 30)].index
+    
+    sell_points = data.loc[sell_dates].Close.values
+    buy_points = data.loc[buy_dates].Close.values
 
     # Check if each recommendation was failure or success
-    results = []
-    for date in sell_dates:
-        if data.loc[date, 'Close'] < data.loc[date-pd.Timedelta(days=1), 'Close']:
-            results.append('Failure')
-        else:
-            results.append('Success')
+    sell_df = pd.DataFrame({'Date': sell_dates, 'Close' : sell_points, 'status' : 0})
+    buy_df = pd.DataFrame({'Date': buy_dates, 'Close' : buy_points, 'status' : 1})
 
-    for date in buy_dates:
-        if data.loc[date, 'Close'] > data.loc[date-pd.Timedelta(days=1), 'Close']:
-            results.append('Success')
-        else:
-            results.append('Failure')
+    df = pd.concat([sell_df, buy_df])
+    df = df.sort_values(by = ['Date'])
+    df = df.reset_index(drop = True)
 
-    # Calculate the success rate of the recommendations
-    success_rate = results.count('Success') / len(results) if len(results) > 0 else 0
-
+    status = 1
+    success = 0
+    count = 0
+    for i in range(len(df)-1):
+        if(status and df.iloc[i].status ==  1):
+            status = 0
+            index = i
+        if(status == 0):
+            self = df.iloc[i]
+            nex = df.iloc[i+1]
+            if(self.status == 1):
+                if(nex.status == 0):
+                    count += 1   
+                    if (self.Close < nex.Close):
+                        
+                        success += 1
+    success_rate = success/count * 100
+    
     return {
-        'close': list(data['Close']), # plot (1)
-        'rsi': list(map(lambda e: None if math.isnan(e) else e, rsi)), # plot (2)
-        'sell_dates': list(sell_dates), # plot triangle points (1) (2)
-        'buy_dates': list(buy_dates), # plot triangle points (1) (2)
-        'results': results, # shit
+        'close': list(data['Close']), # plot (1) y axis
+        'dates' : list(data.index), # for plot x axis
+        'rsi': list(map(lambda e: None if math.isnan(e) else e, rsi)), # plot (2) y axis
+        'sell_dates': list(sell_dates), # plot triangle points (1) (2) x axis
+        'buy_dates': list(buy_dates), # plot triangle points (1) (2) x axis
+        'sell_points': list(sell_points), # for plot y axis
+        'buy_points' : list(buy_points), # for plot y axis
         'success_rate': success_rate # the most important
     }
-    

@@ -9,7 +9,7 @@ interval = ['15m', '30m', '1h', '1d', '1w']
 
 end_date = dt.datetime.strptime("2023-01-01", "%Y-%m-%d").date()
 start_date = end_date - dt.timedelta(days=365) # for 1 year
-ticker, interval = coins[1], interval[3]
+ticker, interval = coins[0], interval[3]
 
 
 
@@ -49,19 +49,23 @@ def EMA_cross(ticker, start_date, end_date, interval, slow=50, fast=20):
             self = df.iloc[i]
             nex = df.iloc[i+1]
             if(self.status == 1):
-                count += 1   
-                if(nex.status == 0 and self.Close < nex.Close):
-                    success += 1
+                if(nex.status == 0):
+                    count += 1   
+                    if (self.Close < nex.Close):   
+                        success += 1
     
     success_rate = (success/count)*100
-    return {
-        'ema_slow' : list(ema_slow.values),  #for plot(y axis)
-        'ema_fast' : list(ema_fast.values), #for plot(y axis)
+    output = {
+        'ema_slow' : ema_slow.values,  #for plot(y axis)
+        'ema_fast' : ema_fast.values, #for plot(y axis)
         'close' : data['Close'], #for plot(y axis)
-        'dates': list(data.index),  #for plot(x axis)
-        'sell_dates': list(sell_dates), #for plot(x axis)
-        'buy_dates': list(buy_dates), #for plot(x axis)
-        'buy_points' : list(buy_points), #for plot(y axis)
-        'sell_points' : list(sell_points), #for plot(y axis)
+        'dates': data.index,  #for plot(x axis)
+        'sell_dates': sell_dates, #for plot(x axis)
+        'buy_dates': buy_dates, #for plot(x axis)
+        'buy_points' : buy_points, #for plot(y axis)
+        'sell_points' : sell_points, #for plot(y axis)
         'success_rate': success_rate
     }
+    return output
+
+btc = EMA_cross(ticker, start_date, end_date, interval)

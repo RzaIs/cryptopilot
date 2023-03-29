@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 from typing import Any
-from indicators.RSI import calculate_RSI
+from indicators.rsi import calculate_RSI
 from indicators.moving_average import calculate_moving_average
 from indicators.madc import calculate_macd
 from indicators.bollinger_bands import get_bollinger_dates
-from indicators.Stochastic_Oscillator import calculate_stochastic_oscillator
+from indicators.stochastic_oscillator import calculate_stochastic_oscillator
 from indicators.backtest_ema import EMA_cross
 from indicators.crypto_values import value as crypto_value
 from datetime import datetime
@@ -55,7 +55,8 @@ async def get_madc(body: RSI_MADC_ReqBody) -> dict[str, Any]:
 async def get_bollinger_bands(body: BollingerBandsReqBody) -> dict[str, Any]:
   return get_bollinger_dates(
     body.crypto,
-    body.period,
+    body.start_date,
+    body.end_date,
     body.interval,
     body.window
   )

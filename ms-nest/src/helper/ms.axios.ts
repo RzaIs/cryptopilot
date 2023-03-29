@@ -12,6 +12,7 @@ export async function msaxios<T>(networkCall: () => Promise<{ data: T }>): Promi
   try {
     return await networkCall()
   } catch (error) {
+    console.log(error)
     if (error instanceof AxiosError && some(error.response)) {
       return error.response
     } else {

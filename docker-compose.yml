@@ -13,6 +13,7 @@ services:
       BRIDGE_SECRET: ${BRIDGE_SECRET}
       EMAIL_ADDRESS: ${EMAIL_ADDRESS}
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      MS_DATA_URL: ${MS_DATA_URL}
 
   ms-data:
     build: ms-data

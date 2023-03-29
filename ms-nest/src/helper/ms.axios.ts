@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios"
 import { some } from "./optional"
 
 export const Axios = axios.create({
-  baseURL: 'https://ml-v1.onrender.com',
+  baseURL: process.env.MS_DATA_URL,
   headers: {
     BRIDGE_SECRET: process.env.BRIDGE_SECRET
   }

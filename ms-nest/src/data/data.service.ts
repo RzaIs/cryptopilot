@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Axios, msaxios } from "src/helper/ms.axios";
-import { BollingerBandsRequestBody, EmaCrossRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel, StochasticRequestBody } from "./data.models";
+import { BollingerBandsRequestBody, CryptoValueRequestBody, EmaCrossRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel, StochasticRequestBody } from "./data.models";
 
 @Injectable()
 export class DataService {
@@ -37,6 +37,12 @@ export class DataService {
   async getEmaCross(body: EmaCrossRequestBody): Promise<unknown> {
     return (await msaxios(() => {
       return Axios.post('/ml/ema', body)
+    })).data
+  }
+
+  async getCryptoValues(body: CryptoValueRequestBody): Promise<unknown> {
+    return (await msaxios(() => {
+      return Axios.post('/ml/cryptos', body)
     })).data
   }
 }

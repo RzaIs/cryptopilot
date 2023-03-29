@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { AuthStrategy } from "src/auth/auth.strategy";
 import { executeAsync } from "src/helper/service.executer";
-import { BollingerBandsRequestBody, EmaCrossRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel, StochasticRequestBody } from "./data.models";
+import { BollingerBandsRequestBody, CryptoValueRequestBody, EmaCrossRequestBody, MovingAverageRequestModel, RSI_MADC_RequestModel, StochasticRequestBody } from "./data.models";
 import { DataService } from "./data.service";
 
 @UseGuards(AuthStrategy.JwtGuard)
@@ -37,5 +37,10 @@ export class DataController {
   @Post('ema')
   async getEmaCross(@Body() body: EmaCrossRequestBody): Promise<unknown> {
     return executeAsync(this.service.getEmaCross(body))
+  }
+
+  @Post('cryptos')
+  async getCryptoValues(@Body() body: CryptoValueRequestBody): Promise<unknown> {
+    return executeAsync(this.service.getCryptoValues(body))
   }
 }

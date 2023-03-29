@@ -23,14 +23,12 @@ def value(ticker, start_date, end_date, interval):
     data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 
 
-    output = {
-            'index': data.index,
-            'open': data['Open'],
-            'high': data['High'], 
-            'low': data['Low'],
-            'close': data['Close'], 
-            'adj_close': data['Adj Close'], 
-            'volume': data['Volume']
-        }
-        
-    return output
+    return {
+        'index': list(data.index),
+        'open': data['Open'],
+        'high': data['High'], 
+        'low': data['Low'],
+        'close': data['Close'], 
+        'adj_close': data['Adj Close'], 
+        'volume': list(data['Volume'])
+    }

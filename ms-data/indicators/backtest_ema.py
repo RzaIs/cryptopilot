@@ -12,8 +12,16 @@ start_date = end_date - dt.timedelta(days=365) # for 1 year
 ticker, interval = coins[0], interval[3]
 
 
-def EMA_cross(ticker, start_date, end_date, interval, slow=50, fast=20):
-    data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
+
+def EMA_cross(ticker, interval, start_date = 0, end_date = 0, slow=50, fast=20):
+    if start_date == 0 and end_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval)
+    elif start_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval, end = end_date)
+    elif end_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval, start = start_date)
+    else:
+        data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 
     ema_slow = data['Close'].ewm(span=slow, adjust=False).mean()
     ema_fast = data['Close'].ewm(span=fast, adjust=False).mean()
@@ -53,7 +61,9 @@ def EMA_cross(ticker, start_date, end_date, interval, slow=50, fast=20):
                     if (self.Close < nex.Close):   
                         success += 1
     
-    success_rate = (success/count)*100
+    success_rate: float
+    success_rate = success/count * 100 if count > 0 else 0
+    
     return {
         'ema_slow' : list(ema_slow.values),  #for plot(y axis)
         'ema_fast' : list(ema_fast.values), #for plot(y axis)

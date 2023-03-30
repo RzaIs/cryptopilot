@@ -12,9 +12,17 @@ end_date = dt.datetime.strptime("2023-01-01", "%Y-%m-%d").date()
 start_date = end_date - dt.timedelta(days=365) # for 1 year
 ticker, interval = coins[2], interval[3]
 
-def calculate_RSI(ticker, start_date, end_date, interval):
+def calculate_RSI(ticker, interval, start_date = 0, end_date = 0):
     # Get data from Yahoo Finance for 1 year period with 1-day intervals for given ticker
-    data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
+    if start_date == 0 and end_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval)
+    elif start_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval, end = end_date)
+    elif end_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval, start = start_date)
+    else:
+        data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
+
 
     # Calculate the differences between the closing prices of each day
     price_diff = data['Close'].diff()
@@ -62,9 +70,9 @@ def calculate_RSI(ticker, start_date, end_date, interval):
                 if(nex.status == 0):
                     count += 1   
                     if (self.Close < nex.Close):
-                        
                         success += 1
-
+    
+    success_rate: float
     success_rate = success/count * 100 if count > 0 else 0
     
     count_na = rsi.isna().sum()

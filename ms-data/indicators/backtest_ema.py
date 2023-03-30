@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import yfinance as yf
 import datetime as dt
-from success_rate import *
+from .success_rate import *
 
 coins = ['BTC-USD', 'ETH-USD', 'ADA-USD', 'DNB-USD', 'KRP-USD', 'OKB-USD', 'MATIC-USD', 'DOT-USD','SOL-USD',
          'LINK-USD', 'TRX-USD', 'LTC-USD', 'UNI-USD', 'AVAX-USD']

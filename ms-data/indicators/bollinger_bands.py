@@ -69,18 +69,14 @@ def get_bollinger_dates(ticker, interval, start_date = 0, end_date = 0, window =
     success_rate: float
     success_rate = success/count * 100 if count > 0 else 0
 
+    na_20ma = data['20MA'].isna().sum()
+
     return {
-        'dates' : list(data.index), #for plot(x axis)
-        'close': list(data['Close'].values), #for plot(y axis)
-        'upper': list( #for plot(y axis)
-            map(lambda e: None if math.isnan(e) else e, data['Upper'].values)    
-        ),
-        'lower': list(  #for plot(y axis)
-            map(lambda e: None if math.isnan(e) else e, data['Lower'].values)    
-        ),
-        '20MA': list( #for plot(y axis)
-            map(lambda e: None if math.isnan(e) else e, data['20MA'].values)
-        ), 
+        'dates' : list(data.index)[na_20ma:], #for plot(x axis)
+        'close': list(data['Close'][na_20ma:].values), #for plot(y axis)
+        'upper': list(data['Upper'][na_20ma:].values),     #for plot(y axis)
+        'lower': list(data['Lower'][na_20ma:].values),     #for plot(y axis)
+        '20MA': list(data['20MA'][na_20ma:].values),  #for plot(y axis) 
         # 'Data': data,
         'sell_dates': list(sell_dates), #for plot(x axis)
         'buy_dates': list(buy_dates), #for plot(x axis)

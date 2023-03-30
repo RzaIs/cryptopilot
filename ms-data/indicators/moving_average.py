@@ -15,7 +15,7 @@ day1, day2 = 5,150 # user input
 
 def calculate_moving_average(ticker, start_date, end_date, interval, day1, day2):
     
-    # Get data from Yahoo Finance for 1 year period with 1-day intervals for given ticker
+    # Get data from Yahoo Finance for period with intervals for given ticker
     data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 
     # Calculate the moving average values
@@ -45,14 +45,12 @@ def calculate_moving_average(ticker, start_date, end_date, interval, day1, day2)
     # Calculate the success rate of the recommendations
     success_rate = results.count('Success') / len(results) if len(results) > 0 else 0
 
+
+
     return {
-        'coin_cloes': list(data['Close']), # plot
-        'ma1': list(
-            map(lambda e:  None if math.isnan(e) else e, ma1)
-        ), # plot
-        'ma2': list(
-            map(lambda e: None if math.isnan(e) else e, ma2)
-        ), # plot
+        'coin_cloes': list(data['Close'])[19:], # plot
+        'ma1': list(ma1),      # plot
+        'ma2': list(ma2), # plot
         'sell_dates': list(sell_dates), # plot
         'buy_dates': list(buy_dates), # plot
         'results': list(results), # shit

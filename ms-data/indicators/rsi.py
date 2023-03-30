@@ -79,5 +79,3 @@ def calculate_RSI(ticker, start_date, end_date, interval):
         'buy_points' : list(buy_points)[count_na:], # for plot y axis
         'success_rate': success_rate # the most important
     }
-
-print(calculate_RSI(ticker, start_date, end_date, interval))

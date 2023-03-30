@@ -61,10 +61,7 @@ def get_bollinger_dates(ticker, start_date, end_date, interval, window = 20) :
 
     success_rate: float
 
-    if count == 0:
-        success_rate = 0
-    else:
-        success_rate = (success / count) * 100
+    success_rate = (success / count) * 100 if count > 0 else 0
 
     return {
         'dates' : list(data.index), #for plot(x axis)
@@ -85,3 +82,5 @@ def get_bollinger_dates(ticker, start_date, end_date, interval, window = 20) :
         'sell_points' : list(sell_points), #for plot(y axis)
         'success_rate': success_rate   
     }
+
+print(get_bollinger_dates(ticker, start_date, end_date, interval, window = 20))

@@ -12,7 +12,6 @@ start_date = end_date - dt.timedelta(days=365) # for 1 year
 ticker, interval = coins[0], interval[3]
 
 
-
 def EMA_cross(ticker, start_date, end_date, interval, slow=50, fast=20):
     data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 

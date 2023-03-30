@@ -70,12 +70,12 @@ def calculate_RSI(ticker, start_date, end_date, interval):
     count_na = rsi.isna().sum()
 
     return {
-        'close': list(data['Close'])[count_na:], # plot (1) y axis
-        'dates' : list(data.index)[count_na:], # for plot x axis
+        'close': list(data['Close'])[count_na+1:], # plot (1) y axis
+        'dates' : list(data.index)[count_na+1:], # for plot x axis
         'rsi': list(rsi)[count_na:], # plot (2) y axis
-        'sell_dates': list(sell_dates)[count_na:], # plot triangle points (1) (2) x axis
-        'buy_dates': list(buy_dates)[count_na:], # plot triangle points (1) (2) x axis
-        'sell_points': list(sell_points)[count_na:], # for plot y axis
-        'buy_points' : list(buy_points)[count_na:], # for plot y axis
+        'sell_dates': list(sell_dates), # plot triangle points (1) (2) x axis
+        'buy_dates': list(buy_dates), # plot triangle points (1) (2) x axis
+        'sell_points': list(sell_points), # for plot y axis
+        'buy_points' : list(buy_points), # for plot y axis
         'success_rate': success_rate # the most important
     }

@@ -13,12 +13,12 @@ ticker, interval = coins[0], interval[3]
 
 
 
-def EMA_cross(ticker, interval, start_date = 0, end_date = 0, slow=50, fast=20):
-    if start_date == 0 and end_date == 0:
+def EMA_cross(ticker, interval, start_date, end_date, slow=50, fast=20):
+    if start_date is None and end_date is None:
         data = yf.download(ticker, period = 'max', interval=interval)
-    elif start_date == 0:
+    elif start_date is None:
         data = yf.download(ticker, period = 'max', interval=interval, end = end_date)
-    elif end_date == 0:
+    elif end_date is None:
         data = yf.download(ticker, period = 'max', interval=interval, start = start_date)
     else:
         data = yf.download(ticker, start = start_date, end = end_date, interval=interval)

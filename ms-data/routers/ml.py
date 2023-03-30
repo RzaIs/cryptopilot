@@ -26,9 +26,9 @@ router: APIRouter = APIRouter(
 async def get_rsi(body: RSI_MADC_ReqBody) -> dict[str, Any]:
   return calculate_RSI(
     body.ticker, 
-    datetime.fromisoformat(body.start_date),
-    datetime.fromisoformat(body.end_date),
-    body.interval
+    body.interval,
+    body.start_date,
+    body.end_date,
   )
 
 @router.post('/ma')
@@ -39,7 +39,7 @@ async def get_ma(body: MovingAverageReqBody) -> dict[str, Any]:
     datetime.fromisoformat(body.end_date),
     body.interval,
     body.day1,
-    body.day2
+    body.day2,
   )
 
 @router.post('/madc')
@@ -48,44 +48,44 @@ async def get_madc(body: RSI_MADC_ReqBody) -> dict[str, Any]:
     body.ticker,
     datetime.fromisoformat(body.start_date),
     datetime.fromisoformat(body.end_date),
-    body.interval
+    body.interval,
   )
 
 @router.post('/bollinger_bands')
 async def get_bollinger_bands(body: BollingerBandsReqBody) -> dict[str, Any]:
   return get_bollinger_dates(
     body.crypto,
+    body.interval,
     body.start_date,
     body.end_date,
-    body.interval,
-    body.window
+    body.window,
   )
 
 @router.post('/stochastic')
 async def get_stochastic_oscillator(body: StochasticReqBody) -> dict[str, Any]:
   return calculate_stochastic_oscillator(
     body.ticker,
+    body.interval,
     body.start_date,
     body.end_date,
-    body.interval
   )
 
 @router.post('/ema')
 async def get_ema_cross(body: EMACrossReqBody) -> dict[str, Any]:
   return EMA_cross(
     body.ticker,
+    body.interval,
     body.start_date,
     body.end_date,
-    body.interval,
     body.slow,
-    body.fast
+    body.fast,
   )
 
 @router.post('/cryptos')
 async def get_crypto_values(body: CryptoValueReqBody) -> dict[str, Any]:
   return crypto_value(
     body.ticker,
+    body.interval,
     body.start_date,
     body.end_date,
-    body.interval
   )

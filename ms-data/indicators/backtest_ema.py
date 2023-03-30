@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import yfinance as yf
 import datetime as dt
+from success_rate import *
 
 coins = ['BTC-USD', 'ETH-USD', 'ADA-USD', 'DNB-USD', 'KRP-USD', 'OKB-USD', 'MATIC-USD', 'DOT-USD','SOL-USD',
          'LINK-USD', 'TRX-USD', 'LTC-USD', 'UNI-USD', 'AVAX-USD']
@@ -13,12 +14,12 @@ ticker, interval = coins[0], interval[3]
 
 
 
-def EMA_cross(ticker, interval, start_date, end_date, slow=50, fast=20):
-    if start_date is None and end_date is None:
+def EMA_cross(ticker, interval, start_date = 0, end_date = 0, slow=50, fast=20):
+    if start_date == 0 and end_date == 0:
         data = yf.download(ticker, period = 'max', interval=interval)
-    elif start_date is None:
+    elif start_date == 0:
         data = yf.download(ticker, period = 'max', interval=interval, end = end_date)
-    elif end_date is None:
+    elif end_date == 0:
         data = yf.download(ticker, period = 'max', interval=interval, start = start_date)
     else:
         data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
@@ -38,32 +39,9 @@ def EMA_cross(ticker, interval, start_date, end_date, slow=50, fast=20):
     buy_points = data.iloc[buy_signals].Close.values
     sell_points = data.iloc[sell_signals].Close.values
 
-    sell_df = pd.DataFrame({'Date': sell_dates, 'Close' : sell_points, 'status' : 0})
-    buy_df = pd.DataFrame({'Date': buy_dates, 'Close' : buy_points, 'status' : 1})
-
-    df = pd.concat([sell_df, buy_df])
-    df = df.sort_values(by = ['Date'])
-    df = df.reset_index(drop = True)
-
-    status = 1
-    success = 0
-    count = 0
-    for i in range(len(df)-1):
-        if(status and df.iloc[i].status ==  1):
-            status = 0
-            index = i
-        if(status == 0):
-            self = df.iloc[i]
-            nex = df.iloc[i+1]
-            if(self.status == 1):
-                if(nex.status == 0):
-                    count += 1   
-                    if (self.Close < nex.Close):   
-                        success += 1
     
-    success_rate: float
-    success_rate = success/count * 100 if count > 0 else 0
-    
+    success_rate = successRate(buy_dates, buy_points, sell_dates, sell_points)
+
     return {
         'ema_slow' : list(ema_slow.values),  #for plot(y axis)
         'ema_fast' : list(ema_fast.values), #for plot(y axis)

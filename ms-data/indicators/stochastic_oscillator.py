@@ -1,7 +1,6 @@
 import yfinance as yf
 import datetime as dt
-import math
-import pandas as pd
+from success_rate import *
 
 coins = ['BTC-USD', 'ETH-USD', 'ADA-USD', 'DNB-USD', 'KRP-USD', 'OKB-USD', 'MATIC-USD', 'DOT-USD','SOL-USD',
          'LINK-USD', 'TRX-USD', 'LTC-USD', 'UNI-USD', 'AVAX-USD']
@@ -9,7 +8,7 @@ interval = ['15m', '30m', '1h', '1d', '1w']
 
 end_date = dt.datetime.strptime("2023-01-01", "%Y-%m-%d").date()
 start_date = end_date - dt.timedelta(days=365) # for 1 year
-ticker, interval = coins[2], interval[3]
+ticker, interval = coins[5], interval[3]
 
 def calculate_stochastic_oscillator(ticker, interval, start_date, end_date):
     
@@ -48,32 +47,8 @@ def calculate_stochastic_oscillator(ticker, interval, start_date, end_date):
                 sell_dates.append(data.index[i])
                 sell_points.append(data.iloc[i].Close)
     
-    # Calculate the success rate of the recommendations
-    sell_df = pd.DataFrame({'Date': sell_dates, 'Close' : sell_points, 'status' : 0})
-    buy_df = pd.DataFrame({'Date': buy_dates, 'Close' : buy_points, 'status' : 1})
-
-    df = pd.concat([sell_df, buy_df])
-    df = df.sort_values(by = ['Date'])
-    df = df.reset_index(drop = True)
-
-    status = 1
-    success = 0
-    count = 0
-    for i in range(len(df)-1):
-        if(status and df.iloc[i].status ==  1):
-            status = 0
-            index = i
-        if(status == 0):
-            self = df.iloc[i]
-            nex = df.iloc[i+1]
-            if(self.status == 1):
-                if(nex.status == 0):
-                    count += 1   
-                    if (self.Close < nex.Close):
-                        success += 1
-                        
-    success_rate: float
-    success_rate = success/count * 100 if count > 0 else 0
+    success_rate:float
+    success_rate = successRate(buy_dates, buy_points, sell_dates, sell_points)
     
     count_na = k_percent.isna().sum()
     
@@ -88,3 +63,5 @@ def calculate_stochastic_oscillator(ticker, interval, start_date, end_date):
         'sell_points' : list(sell_points), # plot points on (1)(2) y axis
         'success_rate': success_rate # the most fudjking important 
     }
+
+print(calculate_stochastic_oscillator(ticker, interval, None, None)['success_rate'])

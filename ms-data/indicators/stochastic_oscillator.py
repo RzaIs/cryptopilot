@@ -75,16 +75,13 @@ def calculate_stochastic_oscillator(ticker, interval, start_date, end_date):
     success_rate: float
     success_rate = success/count * 100 if count > 0 else 0
     
+    count_na = k_percent.isna().sum()
     
     return {
-        'dates' : list(data.index), # plot points on (1)(2) x axis
-        'k_percent': list( # both to plot together independently (2) y axis
-            map(lambda e: None if math.isnan(e) else e, k_percent)
-        ),
-        'd_percent': list( # both to plot together independently (2) y axis
-            map(lambda e: None if math.isnan(e) else e, d_percent)
-        ),
-        'close': list(data['Close'].values),     # plot (1) y axis
+        'dates' : list(data.index)[count_na:], # plot points on (1)(2) x axis
+        'k_percent': list(k_percent)[count_na:], # both to plot together independently (2) y axis
+        'd_percent': list(d_percent)[count_na:], # both to plot together independently (2) y axis)
+        'close': list(data['Close'].values)[count_na:],     # plot (1) y axis
         'buy_dates': list(buy_dates), # plot points on (1)(2) x axis
         'buy_points' : list(buy_points), # plot points on (1)(2) y axis
         'sell_dates':list(sell_dates), # plot points on (1)(2) x axis

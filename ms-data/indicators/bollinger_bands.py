@@ -12,7 +12,7 @@ end_date = dt.datetime.strptime("2023-01-01", "%Y-%m-%d").date()
 start_date = end_date - dt.timedelta(days=365) # for 1 year
 ticker, interval = coins[0], interval[3]
 
-def get_bollinger_dates(ticker, start_date, end_date, interval, window = 40) :
+def get_bollinger_dates(ticker, start_date, end_date, interval, window = 20) :
     data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 
     data['20MA'] = data['Close'].rolling(window=window).mean()

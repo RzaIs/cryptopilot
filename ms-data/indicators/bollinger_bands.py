@@ -60,5 +60,3 @@ def get_bollinger_dates(ticker, interval, start_date, end_date, window = 20) :
         'sell_points' : list(sell_points), #for plot(y axis)
         'success_rate': success_rate   
     }
-
-print(get_bollinger_dates(ticker, interval, start_date, end_date)['success_rate'])

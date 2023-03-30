@@ -63,5 +63,3 @@ def calculate_stochastic_oscillator(ticker, interval, start_date, end_date):
         'sell_points' : list(sell_points), # plot points on (1)(2) y axis
         'success_rate': success_rate # the most fudjking important 
     }
-
-print(calculate_stochastic_oscillator(ticker, interval, None, None)['success_rate'])

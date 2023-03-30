@@ -48,6 +48,10 @@ def calculate_RSI(ticker, interval, start_date = 0, end_date = 0):
     sell_points = data.loc[sell_dates].Close.values
     buy_points = data.loc[buy_dates].Close.values
 
+    sell_points_2 = rsi.loc[sell_dates].values
+    buy_points_2 = rsi.loc[buy_dates].values
+
+
     # Check if each recommendation was failure or success
     sell_df = pd.DataFrame({'Date': sell_dates, 'Close' : sell_points, 'status' : 0})
     buy_df = pd.DataFrame({'Date': buy_dates, 'Close' : buy_points, 'status' : 1})
@@ -83,7 +87,11 @@ def calculate_RSI(ticker, interval, start_date = 0, end_date = 0):
         'rsi': list(rsi)[count_na:], # plot (2) y axis
         'sell_dates': list(sell_dates), # plot triangle points (1) (2) x axis
         'buy_dates': list(buy_dates), # plot triangle points (1) (2) x axis
-        'sell_points': list(sell_points), # for plot y axis
-        'buy_points' : list(buy_points), # for plot y axis
+        'sell_points': list(sell_points), # for plot y axis - sell prices of close value
+        'buy_points' : list(buy_points), # for plot y axis - buy prices of close value
+        'sell_points_2': list(sell_points_2),  # sell points of rsi
+        'buy_points_2': list(buy_points_2),     # buy points of rsi
         'success_rate': success_rate # the most important
     }
+
+print(calculate_RSI(ticker, interval, start_date = 0, end_date = 0))

@@ -18,9 +18,15 @@ end_date = dt.datetime.strptime("2023-01-01", "%Y-%m-%d").date()
 start_date = end_date - dt.timedelta(days=365) # for 1 year
 ticker, interval = coins[2], interval[3]
 
-def value(ticker, start_date, end_date, interval):
-
-    data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
+def value(ticker, interval, start_date = 0, end_date = 0):
+    if start_date == 0 and end_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval)
+    elif start_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval, end = end_date)
+    elif end_date == 0:
+        data = yf.download(ticker, period = 'max', interval=interval, start = start_date)
+    else:
+        data = yf.download(ticker, start = start_date, end = end_date, interval=interval)
 
     output = {
         'index': list(data.index),

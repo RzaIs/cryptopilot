@@ -75,13 +75,17 @@ def calculate_RSI(ticker, interval, start_date = 0, end_date = 0):
     success_rate: float
     success_rate = success/count * 100 if count > 0 else 0
     
+    count_na = rsi.isna().sum()
+
     return {
-        'close': list(data['Close']), # plot (1) y axis
-        'dates' : list(data.index), # for plot x axis
-        'rsi': list(map(lambda e: None if math.isnan(e) else e, rsi)), # plot (2) y axis
-        'sell_dates': list(sell_dates), # plot triangle points (1) (2) x axis
-        'buy_dates': list(buy_dates), # plot triangle points (1) (2) x axis
-        'sell_points': list(sell_points), # for plot y axis
-        'buy_points' : list(buy_points), # for plot y axis
+        'close': list(data['Close'])[count_na:], # plot (1) y axis
+        'dates' : list(data.index)[count_na:], # for plot x axis
+        'rsi': list(rsi)[count_na:], # plot (2) y axis
+        'sell_dates': list(sell_dates)[count_na:], # plot triangle points (1) (2) x axis
+        'buy_dates': list(buy_dates)[count_na:], # plot triangle points (1) (2) x axis
+        'sell_points': list(sell_points)[count_na:], # for plot y axis
+        'buy_points' : list(buy_points)[count_na:], # for plot y axis
         'success_rate': success_rate # the most important
     }
+
+print(calculate_RSI(ticker, start_date, end_date, interval))

@@ -93,5 +93,3 @@ def calculate_RSI(ticker, interval, start_date = 0, end_date = 0):
         'buy_points_2': list(buy_points_2),     # buy points of rsi
         'success_rate': success_rate # the most important
     }
-
-print(calculate_RSI(ticker, interval, start_date = 0, end_date = 0))

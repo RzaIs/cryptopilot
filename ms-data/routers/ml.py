@@ -46,9 +46,9 @@ async def get_ma(body: MovingAverageReqBody) -> dict[str, Any]:
 async def get_madc(body: RSI_MADC_ReqBody) -> dict[str, Any]:
   return calculate_macd(
     body.ticker,
-    datetime.fromisoformat(body.start_date),
-    datetime.fromisoformat(body.end_date),
     body.interval,
+    body.start_date,
+    body.end_date
   )
 
 @router.post('/bollinger_bands')

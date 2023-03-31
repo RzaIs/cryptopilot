@@ -52,5 +52,3 @@ def EMA_cross(ticker, interval, start_date = 0, end_date = 0, slow=50, fast=20):
         'sell_points' : list(sell_points), #for plot(y axis)
         'success_rate': success_rate
     }
-
-print(EMA_cross(ticker, interval, start_date = 0, end_date = 0, slow=50, fast=20))

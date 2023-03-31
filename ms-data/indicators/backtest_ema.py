@@ -39,13 +39,12 @@ def EMA_cross(ticker, interval, start_date = 0, end_date = 0, slow=50, fast=20):
     buy_points = data.iloc[buy_signals].Close.values
     sell_points = data.iloc[sell_signals].Close.values
 
-    
     success_rate = successRate(buy_dates, buy_points, sell_dates, sell_points)
 
     return {
         'ema_slow' : list(ema_slow.values),  #for plot(y axis)
         'ema_fast' : list(ema_fast.values), #for plot(y axis)
-        'close' : data['Close'], #for plot(y axis)
+        'close' : list(data['Close']), #for plot(y axis)
         'dates': list(data.index),  #for plot(x axis)
         'sell_dates': list(sell_dates), #for plot(x axis)
         'buy_dates': list(buy_dates), #for plot(x axis)
@@ -53,3 +52,5 @@ def EMA_cross(ticker, interval, start_date = 0, end_date = 0, slow=50, fast=20):
         'sell_points' : list(sell_points), #for plot(y axis)
         'success_rate': success_rate
     }
+
+print(EMA_cross(ticker, interval, start_date = 0, end_date = 0, slow=50, fast=20))

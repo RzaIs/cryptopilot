@@ -30,11 +30,11 @@ def value(ticker, interval, start_date, end_date):
 
     output = {
         'index': list(data.index),
-        'open': data['Open'],
-        'high': data['High'], 
-        'low': data['Low'],
-        'close': data['Close'], 
-        'adj_close': data['Adj Close'], 
+        'open': list(data['Open']),
+        'high': list(data['High']), 
+        'low': list(data['Low']),
+        'close': list(data['Close']), 
+        'adj_close': list(data['Adj Close']), 
         'volume': list(data['Volume'])
         }
 

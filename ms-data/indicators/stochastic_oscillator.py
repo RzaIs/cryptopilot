@@ -1,5 +1,6 @@
 import yfinance as yf
 import datetime as dt
+import math 
 from .success_rate import *
 
 coins = ['BTC-USD', 'ETH-USD', 'ADA-USD', 'DNB-USD', 'KRP-USD', 'OKB-USD', 'MATIC-USD', 'DOT-USD','SOL-USD',
@@ -54,8 +55,14 @@ def calculate_stochastic_oscillator(ticker, interval, start_date, end_date):
     
     return {
         'dates' : list(data.index)[count_na:], # plot points on (1)(2) x axis
-        'k_percent': list(k_percent)[count_na:], # both to plot together independently (2) y axis
-        'd_percent': list(d_percent)[count_na:], # both to plot together independently (2) y axis)
+        'k_percent': list(map(
+            lambda e: None if math.isnan(e) else e,
+            k_percent[count_na:]
+        )), # both to plot together independently (2) y axis
+        'd_percent': list(map(
+            lambda e: None if math.isnan(e) else e,
+            d_percent[count_na:]
+        )), # both to plot together independently (2) y axis)
         'close': list(data['Close'].values)[count_na:],     # plot (1) y axis
         'buy_dates': list(buy_dates), # plot points on (1)(2) x axis
         'buy_points' : list(buy_points), # plot points on (1)(2) y axis

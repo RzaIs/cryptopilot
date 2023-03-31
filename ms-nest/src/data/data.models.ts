@@ -29,10 +29,10 @@ export class BollingerBandsRequestBody {
 
 export class StochasticRequestBody {
   @IsNotEmpty() ticker: string
-  @IsNotEmpty() start_date: string
+  @IsNotEmpty() interval: string
 
   @IsOptional() end_date: string
-  @IsOptional() interval: string
+  @IsOptional() start_date: string
 }
 
 export class EmaCrossRequestBody {

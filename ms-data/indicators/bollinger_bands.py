@@ -1,5 +1,6 @@
 import yfinance as yf
 import datetime as dt
+import math
 from .success_rate import *
 
 
@@ -50,8 +51,14 @@ def get_bollinger_dates(ticker, interval, start_date, end_date, window = 20) :
     return {
         'dates' : list(data.index)[count_na:], #for plot(x axis)
         'close': list(data['Close'][count_na:].values), #for plot(y axis)
-        'upper': list(data['Upper'][count_na:].values),     #for plot(y axis)
-        'lower': list(data['Lower'][count_na:].values),     #for plot(y axis)
+        'upper': list(map(
+            lambda e: None if math.isnan(e) else e, 
+            data['Upper'][count_na:].values
+        )),     #for plot(y axis)
+        'lower': list(map(
+            lambda e: None if math.isnan(e) else e,
+            data['Lower'][count_na:].values
+        )),     #for plot(y axis)
         '20MA': list(data['20MA'][count_na:].values),  #for plot(y axis) 
         # 'Data': data,
         'sell_dates': list(sell_dates), #for plot(x axis)

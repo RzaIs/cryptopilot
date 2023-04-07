@@ -33,7 +33,7 @@ export class EmailService {
 
     const mailOpt = {
       from: {
-        name: 'Nutro',
+        name: 'Cryptopilot',
         address: this.sender
       },
       to: params.receiver,

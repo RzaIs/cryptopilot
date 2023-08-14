@@ -3,4 +3,4 @@
 ## MS-NEST - TS / Nestjs
 ## MS-DATA - Python / FastAPI 
 
-## [Front-end](https://github.com/TheScientist01/cryptopilot-front) - Reactjs
+## [FRONT-END](https://github.com/TheScientist01/cryptopilot-front) - Reactjs
